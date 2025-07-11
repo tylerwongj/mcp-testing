@@ -1,0 +1,89 @@
+{
+  "entities": [
+    {
+      "name": "Tyler",
+      "entityType": "Person",
+      "observations": [
+        "Prefers dark mode UI design",
+        "Developing a comprehensive game hub called tyler-game-hub",
+        "Uses Claude Code for AI-assisted development",
+        "Interested in multiplayer game development",
+        "Primary goal is to become extremely powerful as a developer using AI agents"
+      ]
+    },
+    {
+      "name": "MCP Testing Project",
+      "entityType": "Project", 
+      "observations": [
+        "Located at /Users/tyler/p2/mcp-testing",
+        "Tests multiple MCP servers including browser-tools, playwright, memory, context7, sequential",
+        "Successfully removed 4 failed MCP servers (notion, tavily, zen, filesystem)",
+        "Created comprehensive test suites for each working MCP server"
+      ]
+    },
+    {
+      "name": "Playwright MCP Server",
+      "entityType": "Technology",
+      "observations": [
+        "Provides browser automation capabilities",
+        "Successfully tested with McDonald's website navigation",
+        "Completed burger comparison test between Burger King and Wendy's",
+        "Captured cropped screenshots and brand logos effectively",
+        "Handles different website navigation patterns well"
+      ]
+    },
+    {
+      "name": "Burger Comparison Test",
+      "entityType": "Activity",
+      "observations": [
+        "Compared burgers from Burger King and Wendy's websites",
+        "Burger King: Isle of Berk Bundles with unique orange/flame-colored bun",
+        "Wendy's: Baconator with double patties and heavy bacon",
+        "Successfully demonstrated Playwright MCP multi-website navigation",
+        "Results stored in /Users/tyler/p2/mcp-testing/playwright/"
+      ]
+    },
+    {
+      "name": "Browser-Tools MCP Server", 
+      "entityType": "Technology",
+      "observations": [
+        "Provides web auditing and analysis capabilities",
+        "Created test pages for accessibility, performance, and SEO testing",
+        "Includes console, network, and form testing functionality",
+        "Distinguished from Playwright functionality during testing"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": "Tyler",
+      "to": "MCP Testing Project", 
+      "relationType": "works_on"
+    },
+    {
+      "from": "MCP Testing Project",
+      "to": "Playwright MCP Server",
+      "relationType": "tests"
+    },
+    {
+      "from": "MCP Testing Project", 
+      "to": "Browser-Tools MCP Server",
+      "relationType": "tests"
+    },
+    {
+      "from": "Tyler",
+      "to": "Burger Comparison Test",
+      "relationType": "completed"
+    },
+    {
+      "from": "Burger Comparison Test",
+      "to": "Playwright MCP Server",
+      "relationType": "uses"
+    },
+    {
+      "from": "Playwright MCP Server",
+      "to": "Browser-Tools MCP Server", 
+      "relationType": "complements"
+    }
+  ]
+}

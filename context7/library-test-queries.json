@@ -1,0 +1,74 @@
+{
+  "frontend_libraries": [
+    {
+      "name": "react", 
+      "topics": ["hooks", "context", "state management", "components"]
+    },
+    {
+      "name": "vue",
+      "topics": ["composition api", "reactivity", "routing", "pinia"]
+    },
+    {
+      "name": "svelte",
+      "topics": ["stores", "reactivity", "components", "sveltekit"]
+    },
+    {
+      "name": "next.js",
+      "topics": ["app router", "api routes", "static generation", "server components"]
+    }
+  ],
+  "backend_libraries": [
+    {
+      "name": "express",
+      "topics": ["middleware", "routing", "authentication", "error handling"]
+    },
+    {
+      "name": "fastify", 
+      "topics": ["plugins", "schemas", "validation", "performance"]
+    },
+    {
+      "name": "socket.io",
+      "topics": ["events", "rooms", "namespaces", "authentication"]
+    },
+    {
+      "name": "mongoose",
+      "topics": ["schemas", "models", "queries", "middleware"]
+    }
+  ],
+  "testing_libraries": [
+    {
+      "name": "jest",
+      "topics": ["mocking", "testing", "assertions", "coverage"]
+    },
+    {
+      "name": "playwright",
+      "topics": ["automation", "testing", "screenshots", "selectors"]
+    },
+    {
+      "name": "vitest", 
+      "topics": ["testing", "mocking", "configuration", "coverage"]
+    },
+    {
+      "name": "cypress",
+      "topics": ["e2e testing", "commands", "intercepts", "fixtures"]
+    }
+  ],
+  "utility_libraries": [
+    {
+      "name": "lodash",
+      "topics": ["collections", "functions", "objects", "arrays"]
+    },
+    {
+      "name": "axios",
+      "topics": ["requests", "interceptors", "configuration", "error handling"]
+    },
+    {
+      "name": "dayjs",
+      "topics": ["formatting", "parsing", "manipulation", "plugins"]
+    },
+    {
+      "name": "zod",
+      "topics": ["validation", "schemas", "types", "parsing"]
+    }
+  ]
+}

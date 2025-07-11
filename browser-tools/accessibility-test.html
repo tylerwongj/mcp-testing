@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Test Page - Browser Tools MCP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        /* Intentional accessibility issues for testing */
+        .low-contrast {
+            color: #ccc;
+            background-color: #fff;
+        }
+        
+        .very-low-contrast {
+            color: #ddd;
+            background-color: #eee;
+        }
+        
+        .fake-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 5px;
+            border-radius: 4px;
+        }
+        
+        .small-text {
+            font-size: 10px;
+        }
+        
+        .no-focus {
+            outline: none;
+        }
+        
+        .good-contrast {
+            color: #000;
+            background-color: #fff;
+        }
+        
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background-color: #000;
+            color: #fff;
+            padding: 8px;
+            z-index: 100;
+            text-decoration: none;
+        }
+        
+        .skip-link:focus {
+            top: 6px;
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <div class="container">
+        <h1>Accessibility Test Page</h1>
+        <p>This page contains both good and bad accessibility practices for testing the browser-tools MCP server.</p>
+        
+        <main id="main-content">
+            <section>
+                <h2>Good Accessibility Examples</h2>
+                
+                <h3>Proper Form Labels</h3>
+                <form>
+                    <div>
+                        <label for="good-name">Name (required):</label>
+                        <input type="text" id="good-name" name="name" required aria-describedby="name-help">
+                        <small id="name-help">Please enter your full name</small>
+                    </div>
+                    
+                    <div>
+                        <label for="good-email">Email:</label>
+                        <input type="email" id="good-email" name="email" aria-describedby="email-help">
+                        <small id="email-help">We'll never share your email</small>
+                    </div>
+                    
+                    <fieldset>
+                        <legend>Preferred Contact Method</legend>
+                        <input type="radio" id="contact-email" name="contact" value="email">
+                        <label for="contact-email">Email</label>
+                        
+                        <input type="radio" id="contact-phone" name="contact" value="phone">
+                        <label for="contact-phone">Phone</label>
+                    </fieldset>
+                    
+                    <button type="submit">Submit Form</button>
+                </form>
+                
+                <h3>Proper Images</h3>
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwN2JmZiIvPgogIDx0ZXh0IHg9IjUwIiB5PSI1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPkltYWdlPC90ZXh0Pgo8L3N2Zz4K" alt="Blue square with white text saying 'Image'" width="100" height="100">
+                
+                <h3>Good Color Contrast</h3>
+                <p class="good-contrast">This text has good contrast and is easy to read.</p>
+                
+                <h3>Semantic HTML</h3>
+                <button onclick="alert('This is a real button')">Accessible Button</button>
+                
+                <h3>Proper Headings</h3>
+                <h4>This is a properly nested heading</h4>
+                <p>Content under the h4 heading.</p>
+            </section>
+            
+            <section>
+                <h2>Accessibility Issues to Detect</h2>
+                
+                <h3>Missing Form Labels</h3>
+                <form>
+                    <input type="text" placeholder="Name (no label)">
+                    <input type="email" placeholder="Email (no label)">
+                    <input type="radio" name="bad-radio" value="option1"> Option 1
+                    <input type="radio" name="bad-radio" value="option2"> Option 2
+                    <input type="submit" value="Submit">
+                </form>
+                
+                <h3>Missing Image Alt Text</h3>
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmMDAzMyIvPgogIDx0ZXh0IHg9IjUwIiB5PSI1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPk5vIEFsdDwvdGV4dD4KPC9zdmc+Cg==" width="100" height="100">
+                
+                <h3>Poor Color Contrast</h3>
+                <p class="low-contrast">This text has low contrast and may be hard to read.</p>
+                <p class="very-low-contrast">This text has very low contrast and is very hard to read.</p>
+                
+                <h3>Non-Semantic Elements</h3>
+                <div class="fake-button" onclick="alert('This is not a real button')">Fake Button</div>
+                <span class="fake-button" onclick="alert('Another fake button')">Another Fake Button</span>
+                
+                <h3>Missing Focus Indicators</h3>
+                <input type="text" placeholder="No focus outline" class="no-focus">
+                <button class="no-focus">Button with no focus</button>
+                
+                <h3>Improper Heading Structure</h3>
+                <h1>This h1 comes after h2 and h3 (bad nesting)</h1>
+                
+                <h3>Small Text</h3>
+                <p class="small-text">This text is too small and may be hard to read for users with vision impairments.</p>
+                
+                <h3>Missing Link Context</h3>
+                <a href="https://example.com">Click here</a> for more information.
+                <a href="https://example.com">Read more</a>
+                
+                <h3>Empty Links and Buttons</h3>
+                <a href="#"></a>
+                <button></button>
+                
+                <h3>Missing Table Headers</h3>
+                <table border="1">
+                    <tr>
+                        <td>Name</td>
+                        <td>Age</td>
+                        <td>City</td>
+                    </tr>
+                    <tr>
+                        <td>John</td>
+                        <td>25</td>
+                        <td>New York</td>
+                    </tr>
+                    <tr>
+                        <td>Jane</td>
+                        <td>30</td>
+                        <td>Los Angeles</td>
+                    </tr>
+                </table>
+                
+                <h3>Proper Table (for comparison)</h3>
+                <table border="1">
+                    <caption>Employee Information</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">City</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Alice</td>
+                            <td>28</td>
+                            <td>Chicago</td>
+                        </tr>
+                        <tr>
+                            <td>Bob</td>
+                            <td>32</td>
+                            <td>Houston</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Missing Language Attributes</h3>
+                <p lang="es">Hola, este texto está en español pero no tiene el atributo lang.</p>
+                <p>This paragraph should have lang="es" but doesn't: Hola mundo</p>
+                
+                <h3>Keyboard Navigation Issues</h3>
+                <div tabindex="0" onclick="alert('Clickable div')">Clickable div (should be a button)</div>
+                
+                <h3>ARIA Issues</h3>
+                <div role="button" onclick="alert('ARIA button')">ARIA button without keyboard support</div>
+                <div aria-label="Close" onclick="closeDialog()">×</div>
+                
+                <h3>Color-Only Information</h3>
+                <p>Required fields are marked in <span style="color: red;">red</span>.</p>
+                <p>Success messages are shown in <span style="color: green;">green</span>.</p>
+            </section>
+            
+            <section>
+                <h2>Screen Reader Testing</h2>
+                <p>This section contains elements specifically for screen reader testing.</p>
+                
+                <div aria-live="polite" id="live-region">
+                    <p>This is a live region that will be announced when updated.</p>
+                </div>
+                
+                <button onclick="updateLiveRegion()">Update Live Region</button>
+                
+                <div aria-hidden="true">
+                    <p>This content is hidden from screen readers but visible on screen.</p>
+                </div>
+                
+                <p>
+                    <span class="sr-only">This text is only visible to screen readers.</span>
+                    This text is visible to everyone.
+                </p>
+                
+                <details>
+                    <summary>Expandable Content</summary>
+                    <p>This content is hidden until expanded.</p>
+                </details>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        function updateLiveRegion() {
+            const liveRegion = document.getElementById('live-region');
+            liveRegion.innerHTML = '<p>Live region updated at: ' + new Date().toLocaleTimeString() + '</p>';
+        }
+        
+        function closeDialog() {
+            alert('Dialog closed');
+        }
+        
+        // Log accessibility events
+        console.log('Accessibility test page loaded');
+        
+        // Add some dynamic content changes for testing
+        setTimeout(() => {
+            const dynamicContent = document.createElement('div');
+            dynamicContent.innerHTML = '<p>This content was added dynamically without proper announcement.</p>';
+            document.querySelector('main').appendChild(dynamicContent);
+        }, 2000);
+    </script>
+</body>
+</html>

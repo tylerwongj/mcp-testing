@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Test Page - Browser Tools MCP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .heavy-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .card {
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .large-image {
+            width: 100%;
+            height: 400px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI0MDAiIHZpZXdCb3g9IjAgMCAxMDAwIDQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmY2YjZiIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzRlY2RjNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjEwMDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgogIDx0ZXh0IHg9IjUwMCIgeT0iMjEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIyNCIgZm9udC1mYW1pbHk9IkFyaWFsIj5MYXJnZSBJbWFnZSBQbGFjZWhvbGRlcjwvdGV4dD4KPC9zdmc+') center/cover;
+            margin: 20px 0;
+        }
+        
+        .animation-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .moving-element {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            border-radius: 50%;
+            animation: moveAround 4s linear infinite;
+        }
+        
+        @keyframes moveAround {
+            0% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(200px) translateY(0); }
+            50% { transform: translateX(200px) translateY(100px); }
+            75% { transform: translateX(0) translateY(100px); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+        
+        .heavy-styles {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f39c12, #e74c3c);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .memory-leak-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .performance-stats {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .slow-loading {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .fps-counter {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        /* Inefficient CSS */
+        * {
+            box-sizing: border-box;
+        }
+        
+        .inefficient-selector div div div div {
+            color: #333;
+        }
+        
+        .expensive-effects {
+            filter: blur(0.5px) brightness(1.1) contrast(1.1);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+    </style>
+    
+    <!-- Multiple external resources to test loading -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="fps-counter" id="fps-counter">FPS: --</div>
+    
+    <div class="container">
+        <h1>Performance Test Page</h1>
+        <p>This page contains various performance issues and optimization opportunities for testing the browser-tools MCP server.</p>
+        
+        <div class="section">
+            <h2>Performance Metrics</h2>
+            <div class="performance-stats" id="performance-stats">
+                <div>Page Load Time: <span id="load-time">Calculating...</span></div>
+                <div>DOM Elements: <span id="dom-count">--</span></div>
+                <div>Memory Usage: <span id="memory-usage">--</span></div>
+                <div>FPS: <span id="fps-display">--</span></div>
+            </div>
+            
+            <button onclick="measurePerformance()">Measure Performance</button>
+            <button onclick="clearPerformanceData()">Clear Data</button>
+        </div>
+        
+        <div class="section">
+            <h2>Heavy DOM Manipulation</h2>
+            <p>These buttons create performance bottlenecks through DOM manipulation.</p>
+            <button onclick="createManyElements()">Create Many Elements (Performance Impact)</button>
+            <button onclick="heavyStyleChanges()">Heavy Style Changes</button>
+            <button onclick="layoutThrashing()">Layout Thrashing</button>
+            <button onclick="clearHeavyContent()">Clear Heavy Content</button>
+            
+            <div class="heavy-content" id="heavy-content"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Memory Leaks</h2>
+            <p>These buttons demonstrate potential memory leaks.</p>
+            <button onclick="createMemoryLeak()">Create Memory Leak</button>
+            <button onclick="createEventListeners()">Add Event Listeners</button>
+            <button onclick="createTimers()">Create Timers</button>
+            <button onclick="stopMemoryLeaks()">Stop Memory Leaks</button>
+            
+            <div class="memory-leak-container" id="memory-container"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Slow Network Resources</h2>
+            <div class="slow-loading">
+                <p>This section simulates slow-loading resources.</p>
+                <button onclick="loadSlowResources()">Load Slow Resources</button>
+                <button onclick="loadLargeImages()">Load Large Images</button>
+                <div id="slow-resources"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>CPU Intensive Tasks</h2>
+            <button onclick="heavyCalculation()">Heavy Calculation</button>
+            <button onclick="fibonacci(40)">Fibonacci (40)</button>
+            <button onclick="sortLargeArray()">Sort Large Array</button>
+            <button onclick="complexAlgorithm()">Complex Algorithm</button>
+            
+            <div id="calculation-results"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Animations and Visual Effects</h2>
+            <div class="animation-container">
+                <div class="moving-element"></div>
+                <div class="moving-element" style="animation-delay: 0.5s; background-color: #28a745;"></div>
+                <div class="moving-element" style="animation-delay: 1s; background-color: #ffc107;"></div>
+                <div class="moving-element" style="animation-delay: 1.5s; background-color: #dc3545;"></div>
+            </div>
+            
+            <div class="heavy-styles">
+                <h3>Heavy CSS Effects</h3>
+                <p>This section uses expensive CSS effects like gradients, shadows, and animations.</p>
+            </div>
+            
+            <button onclick="startHeavyAnimations()">Start Heavy Animations</button>
+            <button onclick="stopHeavyAnimations()">Stop Heavy Animations</button>
+        </div>
+        
+        <div class="section">
+            <h2>Large Content Area</h2>
+            <div class="large-image"></div>
+            
+            <div id="large-content-area">
+                <!-- This will be populated with large amounts of content -->
+            </div>
+            
+            <button onclick="generateLargeContent()">Generate Large Content</button>
+        </div>
+        
+        <div class="section">
+            <h2>Inefficient Selectors</h2>
+            <div class="inefficient-selector">
+                <div><div><div><div>Deeply nested content that uses inefficient CSS selectors</div></div></div></div>
+                <div><div><div><div>More deeply nested content</div></div></div></div>
+                <div><div><div><div>Even more deeply nested content</div></div></div></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Performance tracking variables
+        let memoryLeakArray = [];
+        let eventListeners = [];
+        let timers = [];
+        let animationFrameId;
+        let fpsCounter = 0;
+        let lastTime = performance.now();
+        
+        // Page load performance
+        window.addEventListener('load', function() {
+            const loadTime = performance.now();
+            document.getElementById('load-time').textContent = Math.round(loadTime) + 'ms';
+            
+            // Start FPS counter
+            startFPSCounter();
+            
+            // Update DOM count
+            updateDOMCount();
+            
+            // Initial performance measurement
+            setTimeout(measurePerformance, 1000);
+        });
+        
+        function startFPSCounter() {
+            let frames = 0;
+            let lastSecond = performance.now();
+            
+            function countFPS() {
+                frames++;
+                const now = performance.now();
+                
+                if (now - lastSecond >= 1000) {
+                    const fps = Math.round(frames * 1000 / (now - lastSecond));
+                    document.getElementById('fps-counter').textContent = `FPS: ${fps}`;
+                    document.getElementById('fps-display').textContent = fps;
+                    frames = 0;
+                    lastSecond = now;
+                }
+                
+                animationFrameId = requestAnimationFrame(countFPS);
+            }
+            
+            countFPS();
+        }
+        
+        function measurePerformance() {
+            // Memory usage (if available)
+            if (performance.memory) {
+                const memUsage = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+                document.getElementById('memory-usage').textContent = memUsage + ' MB';
+            }
+            
+            // Performance timing
+            const navigation = performance.getEntriesByType('navigation')[0];
+            if (navigation) {
+                console.log('Navigation timing:', navigation);
+            }
+            
+            // Resource timing
+            const resources = performance.getEntriesByType('resource');
+            console.log('Resource timing:', resources);
+            
+            // Paint timing
+            const paints = performance.getEntriesByType('paint');
+            console.log('Paint timing:', paints);
+        }
+        
+        function updateDOMCount() {
+            const domCount = document.querySelectorAll('*').length;
+            document.getElementById('dom-count').textContent = domCount;
+        }
+        
+        function clearPerformanceData() {
+            performance.clearMarks();
+            performance.clearMeasures();
+            console.log('Performance data cleared');
+        }
+        
+        function createManyElements() {
+            const container = document.getElementById('heavy-content');
+            const startTime = performance.now();
+            
+            for (let i = 0; i < 1000; i++) {
+                const div = document.createElement('div');
+                div.className = 'card expensive-effects';
+                div.innerHTML = `
+                    <h4>Card ${i}</h4>
+                    <p>This is card number ${i} with some content.</p>
+                    <button onclick="alert('Card ${i} clicked')">Click Me</button>
+                `;
+                container.appendChild(div);
+            }
+            
+            const endTime = performance.now();
+            console.log(`Created 1000 elements in ${endTime - startTime}ms`);
+            updateDOMCount();
+        }
+        
+        function heavyStyleChanges() {
+            const elements = document.querySelectorAll('.card');
+            const startTime = performance.now();
+            
+            elements.forEach((element, index) => {
+                element.style.backgroundColor = `hsl(${index * 10}, 70%, 50%)`;
+                element.style.transform = `rotate(${index * 2}deg)`;
+                element.style.borderRadius = `${Math.random() * 20}px`;
+            });
+            
+            const endTime = performance.now();
+            console.log(`Style changes completed in ${endTime - startTime}ms`);
+        }
+        
+        function layoutThrashing() {
+            const container = document.getElementById('heavy-content');
+            const startTime = performance.now();
+            
+            for (let i = 0; i < 100; i++) {
+                container.style.marginLeft = (i % 2) * 10 + 'px';
+                const width = container.offsetWidth; // Force layout
+                container.style.marginTop = (i % 2) * 10 + 'px';
+                const height = container.offsetHeight; // Force layout
+            }
+            
+            const endTime = performance.now();
+            console.log(`Layout thrashing completed in ${endTime - startTime}ms`);
+        }
+        
+        function clearHeavyContent() {
+            document.getElementById('heavy-content').innerHTML = '';
+            updateDOMCount();
+        }
+        
+        function createMemoryLeak() {
+            const container = document.getElementById('memory-container');
+            
+            // Create large objects that won't be garbage collected
+            for (let i = 0; i < 1000; i++) {
+                const largeObject = {
+                    id: i,
+                    data: new Array(1000).fill(Math.random()),
+                    timestamp: new Date(),
+                    references: []
+                };
+                
+                // Create circular references
+                largeObject.references.push(largeObject);
+                memoryLeakArray.push(largeObject);
+            }
+            
+            const div = document.createElement('div');
+            div.textContent = `Memory leak created: ${memoryLeakArray.length} objects`;
+            container.appendChild(div);
+            
+            console.log('Memory leak created:', memoryLeakArray.length, 'objects');
+        }
+        
+        function createEventListeners() {
+            const container = document.getElementById('memory-container');
+            
+            for (let i = 0; i < 100; i++) {
+                const button = document.createElement('button');
+                button.textContent = `Button ${i}`;
+                
+                // Add event listener that won't be removed
+                const listener = function() {
+                    console.log(`Button ${i} clicked`);
+                };
+                
+                button.addEventListener('click', listener);
+                eventListeners.push({ element: button, listener: listener });
+                container.appendChild(button);
+            }
+            
+            console.log('Event listeners created:', eventListeners.length);
+        }
+        
+        function createTimers() {
+            for (let i = 0; i < 50; i++) {
+                const interval = setInterval(() => {
+                    console.log(`Timer ${i} running`);
+                }, 1000 + Math.random() * 1000);
+                
+                timers.push(interval);
+            }
+            
+            console.log('Timers created:', timers.length);
+        }
+        
+        function stopMemoryLeaks() {
+            // Clear arrays
+            memoryLeakArray = [];
+            
+            // Remove event listeners
+            eventListeners.forEach(({ element, listener }) => {
+                element.removeEventListener('click', listener);
+            });
+            eventListeners = [];
+            
+            // Clear timers
+            timers.forEach(timer => clearInterval(timer));
+            timers = [];
+            
+            // Clear container
+            document.getElementById('memory-container').innerHTML = '';
+            
+            console.log('Memory leaks stopped');
+        }
+        
+        function loadSlowResources() {
+            const container = document.getElementById('slow-resources');
+            
+            // Create slow-loading images
+            for (let i = 0; i < 5; i++) {
+                const img = document.createElement('img');
+                img.src = `https://picsum.photos/400/300?random=${i}&t=${Date.now()}`;
+                img.style.width = '200px';
+                img.style.height = '150px';
+                img.style.margin = '10px';
+                img.loading = 'lazy';
+                container.appendChild(img);
+            }
+        }
+        
+        function loadLargeImages() {
+            const container = document.getElementById('slow-resources');
+            
+            // Create large images
+            for (let i = 0; i < 3; i++) {
+                const img = document.createElement('img');
+                img.src = `https://picsum.photos/1920/1080?random=${i + 10}&t=${Date.now()}`;
+                img.style.width = '100%';
+                img.style.maxWidth = '400px';
+                img.style.height = 'auto';
+                img.style.margin = '10px';
+                container.appendChild(img);
+            }
+        }
+        
+        function heavyCalculation() {
+            const startTime = performance.now();
+            let result = 0;
+            
+            for (let i = 0; i < 10000000; i++) {
+                result += Math.sqrt(i) * Math.sin(i) * Math.cos(i);
+            }
+            
+            const endTime = performance.now();
+            const container = document.getElementById('calculation-results');
+            const div = document.createElement('div');
+            div.innerHTML = `Heavy calculation completed in ${Math.round(endTime - startTime)}ms. Result: ${result.toFixed(2)}`;
+            container.appendChild(div);
+        }
+        
+        function fibonacci(n) {
+            const startTime = performance.now();
+            
+            function fib(num) {
+                if (num <= 1) return num;
+                return fib(num - 1) + fib(num - 2);
+            }
+            
+            const result = fib(n);
+            const endTime = performance.now();
+            
+            const container = document.getElementById('calculation-results');
+            const div = document.createElement('div');
+            div.innerHTML = `Fibonacci(${n}) = ${result}, calculated in ${Math.round(endTime - startTime)}ms`;
+            container.appendChild(div);
+        }
+        
+        function sortLargeArray() {
+            const startTime = performance.now();
+            const largeArray = Array.from({ length: 100000 }, () => Math.random());
+            
+            largeArray.sort((a, b) => a - b);
+            
+            const endTime = performance.now();
+            const container = document.getElementById('calculation-results');
+            const div = document.createElement('div');
+            div.innerHTML = `Sorted array of 100,000 elements in ${Math.round(endTime - startTime)}ms`;
+            container.appendChild(div);
+        }
+        
+        function complexAlgorithm() {
+            const startTime = performance.now();
+            
+            // Complex nested loops
+            let result = 0;
+            for (let i = 0; i < 1000; i++) {
+                for (let j = 0; j < 1000; j++) {
+                    result += Math.pow(i, 2) + Math.pow(j, 2);
+                }
+            }
+            
+            const endTime = performance.now();
+            const container = document.getElementById('calculation-results');
+            const div = document.createElement('div');
+            div.innerHTML = `Complex algorithm completed in ${Math.round(endTime - startTime)}ms. Result: ${result}`;
+            container.appendChild(div);
+        }
+        
+        function startHeavyAnimations() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animation = `moveAround ${2 + Math.random() * 2}s linear infinite`;
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        }
+        
+        function stopHeavyAnimations() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.animation = 'none';
+            });
+        }
+        
+        function generateLargeContent() {
+            const container = document.getElementById('large-content-area');
+            const startTime = performance.now();
+            
+            let content = '';
+            for (let i = 0; i < 1000; i++) {
+                content += `<div class="card"><h4>Large Content ${i}</h4><p>This is a large amount of content for testing purposes. It contains multiple paragraphs and elements to test rendering performance.</p></div>`;
+            }
+            
+            container.innerHTML = content;
+            
+            const endTime = performance.now();
+            console.log(`Generated large content in ${Math.round(endTime - startTime)}ms`);
+            updateDOMCount();
+        }
+        
+        // Performance observers (if supported)
+        if ('PerformanceObserver' in window) {
+            const observer = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    if (entry.entryType === 'measure') {
+                        console.log('Performance measure:', entry);
+                    }
+                }
+            });
+            observer.observe({ entryTypes: ['measure'] });
+        }
+        
+        // Log initial performance
+        console.log('Performance test page loaded');
+        console.log('Initial performance:', performance.now());
+    </script>
+</body>
+</html>
